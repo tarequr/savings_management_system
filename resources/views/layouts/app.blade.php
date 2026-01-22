@@ -35,55 +35,79 @@
             #sidebar {
                 min-width: 260px;
                 max-width: 260px;
-                background: var(--sidebar-bg);
+                background: #2c3d94;
                 color: #ffffff;
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                 min-height: 100vh;
                 position: relative;
                 z-index: 1000;
+                box-shadow: 4px 0 10px rgba(0,0,0,0.05);
             }
             #sidebar.active { margin-left: -260px; }
             #sidebar .sidebar-header { 
-                padding: 25px 20px; 
-                background: rgba(0,0,0,0.1); 
-                text-align: left;
-                border-bottom: 1px solid rgba(255,255,255,0.05);
+                padding: 30px 20px; 
+                text-align: center;
+                border: none;
             }
-            #sidebar .brand-name {
-                font-size: 1.1rem;
-                font-weight: 700;
-                letter-spacing: -0.02em;
+            #sidebar .brand-text {
+                font-size: 1.4rem;
+                font-weight: 800;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: #fff;
             }
             
-            #sidebar ul.components { padding: 15px 0; }
+            #sidebar ul.components { padding: 10px 0; }
+            #sidebar .section-title {
+                padding: 15px 25px 5px;
+                font-size: 0.7rem;
+                font-weight: 700;
+                letter-spacing: 1.5px;
+                color: rgba(255, 255, 255, 0.5);
+                text-transform: uppercase;
+            }
             #sidebar ul li a {
                 padding: 12px 25px;
                 font-size: 0.95rem;
-                font-weight: 500;
+                font-weight: 400;
                 display: flex;
                 align-items: center;
-                color: rgba(255, 255, 255, 0.7);
+                color: rgba(255, 255, 255, 0.8);
                 text-decoration: none;
-                transition: 0.2s;
+                transition: all 0.2s;
             }
-            #sidebar ul li a i { width: 20px; font-size: 1.1rem; margin-right: 12px; opacity: 0.8; }
+            #sidebar ul li a i:not(.arrow) { 
+                width: 20px; 
+                font-size: 1.1rem; 
+                margin-right: 15px; 
+                text-align: center;
+                opacity: 0.8; 
+            }
+            #sidebar ul li a .arrow {
+                margin-left: auto;
+                font-size: 0.7rem;
+                opacity: 0.5;
+            }
             #sidebar ul li a:hover { 
                 color: #ffffff; 
-                background: var(--sidebar-hover);
+                background: rgba(255, 255, 255, 0.05);
             }
             #sidebar ul li.active > a { 
                 color: #ffffff; 
-                background: var(--sidebar-active);
-                position: relative;
+                background: rgba(255, 255, 255, 0.12);
+                font-weight: 500;
             }
-            #sidebar ul li.active > a::after {
-                content: '';
+            #sidebar .sidebar-footer {
                 position: absolute;
-                right: 0;
-                top: 0;
-                height: 100%;
-                width: 4px;
-                background: #fff;
+                bottom: 0;
+                width: 100%;
+                padding: 20px;
+                border-top: 1px solid rgba(255,255,255,0.05);
+            }
+            .user-pill {
+                background: rgba(255,255,255,0.05);
+                padding: 10px 15px;
+                border-radius: 8px;
             }
             
             #content { width: 100%; padding: 0; min-height: 100vh; transition: all 0.3s; }
