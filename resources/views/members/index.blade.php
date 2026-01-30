@@ -46,7 +46,7 @@
                                     <tbody class="text-center">
                                         @foreach($members as $key => $member)
                                             <tr>
-                                                <td class="text-center text-muted">#{{ $key + 1 }}</td>
+                                                <td class="text-center text-muted" data-order="{{ $key + 1 }}">#{{ $key + 1 }}</td>
                                                 <td>
                                                     <div class="widget-content p-0">
                                                         <div class="widget-content-wrapper">
