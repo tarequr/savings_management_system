@@ -147,6 +147,7 @@
         </style>
 
         @stack('styles')
+        <link href="{{ asset('css/iziToast.css') }}" rel="stylesheet">
     </head>
     <body class="antialiased">
         <div id="wrapper">
@@ -184,5 +185,7 @@
         </script>
 
         @stack('scripts')
+        <script src="{{ asset('js/iziToast.js') }}"></script>
+        @include('vendor.lara-izitoast.toast')
     </body>
 </html>
