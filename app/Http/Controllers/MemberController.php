@@ -12,7 +12,7 @@ class MemberController extends Controller
 {
     public function index()
     {
-        $members = User::where('role', 'member')->latest()->paginate(10);
+        $members = User::where('role', 'member')->latest()->get();
         return view('members.index', compact('members'));
     }
 
