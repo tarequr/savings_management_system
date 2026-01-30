@@ -124,4 +124,25 @@ class MemberController extends Controller
             return back()->withInput();
         }
     }
+
+    public function destroy($id)
+    {
+        try {
+            $member = User::findOrFail($id);
+
+            if ($member->photo && file_exists(public_path('upload/members/' . $member->photo))) {
+                unlink(public_path('upload/members/' . $member->photo));
+            }
+
+            $member->delete();
+
+            notify()->success('Member deleted successfully.', 'Success');
+            return redirect()->back();
+
+        } catch (Exception $e) {
+            Log::error('Member Delete Error: ' . $e->getMessage());
+            notify()->error('Something went wrong! Please try again.', 'Error');
+            return redirect()->back();
+        }
+    }
 }

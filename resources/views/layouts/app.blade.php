@@ -203,6 +203,8 @@
         <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
         <script src="{{ asset('js/iziToast.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/sweetalert2@11.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/customSweetalert2.js') }}"></script>
         @include('vendor.lara-izitoast.toast')
 
         <script>

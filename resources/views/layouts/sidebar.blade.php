@@ -28,7 +28,7 @@
             <a href="{{ route('savings.index') }}">
                 <i class="far fa-gem"></i>
                 <span>Savings Management</span>
-                <i class="fas fa-chevron-right arrow"></i>
+                <!-- <i class="fas fa-chevron-right arrow"></i> -->
             </a>
         </li>
 
@@ -36,7 +36,7 @@
             <a href="{{ route('loans.index') }}">
                 <i class="far fa-handshake"></i>
                 <span>Loans & Grants</span>
-                <i class="fas fa-chevron-right arrow"></i>
+                <!-- <i class="fas fa-chevron-right arrow"></i> -->
             </a>
         </li>
 
