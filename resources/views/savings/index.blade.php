@@ -1,56 +1,93 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-2xl text-indigo-800 leading-tight">
-                {{ __('Savings Records') }}
-            </h2>
-            @if(Auth::user()->isAdmin())
-            <a href="{{ route('savings.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition ease-in-out duration-150">
-                Add Deposit
-            </a>
-            @endif
-        </div>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12 bg-gray-50 min-h-screen">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-gray-50 text-gray-600 text-sm uppercase">
-                            <tr>
-                                @if(Auth::user()->isAdmin())
-                                <th class="px-6 py-4 font-medium">Member</th>
-                                @endif
-                                <th class="px-6 py-4 font-medium">Month/Year</th>
-                                <th class="px-6 py-4 font-medium">Amount</th>
-                                <th class="px-6 py-4 font-medium">Date</th>
-                                <th class="px-6 py-4 font-medium">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100">
-                            @foreach($savings as $saving)
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                @if(Auth::user()->isAdmin())
-                                <td class="px-6 py-4 text-gray-800 font-bold capitalize">{{ $saving->user->name }}</td>
-                                @endif
-                                <td class="px-6 py-4 text-gray-600">{{ $saving->month }} {{ $saving->year }}</td>
-                                <td class="px-6 py-4 text-indigo-600 font-bold">৳{{ number_format($saving->amount) }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500">{{ $saving->payment_date ? date('d M, Y', strtotime($saving->payment_date)) : 'N/A' }}</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 text-xs rounded-full font-bold {{ $saving->status == 'paid' ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-600' }}">
-                                        {{ strtoupper($saving->status) }}
-                                    </span>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="px-6 py-4 bg-gray-50">
-                    {{ $savings->links() }}
-                </div>
+@section('content')
+    <!-- Start content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h4 class="page-title">Savings Management</h4>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="float-end">
+                            @if (Auth::user()->isAdmin())
+                            <a href="{{ route('savings.create') }}" class="btn btn-primary btn-sm btn-shadow">
+                                <i class="fa fa-plus-circle"></i> Add Saving
+                            </a>
+                            @endif
+                        </ol>
+                    </div>
+                </div> <!-- end row -->
             </div>
+            <!-- end page-title -->
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card m-b-30">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                                    style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#SL</th>
+                                            <th class="text-center">Member Name</th>
+                                            <th class="text-center">Amount</th>
+                                            <th class="text-center">Month/Year</th>
+                                            <th class="text-center">Payment Date</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        @foreach($savings as $key => $saving)
+                                            <tr>
+                                                <td class="text-center text-muted" data-order="{{ $key + 1 }}">#{{ $key + 1 }}</td>
+                                                <td>
+                                                    <a href="{{ route('members.show', $saving->user_id) }}" class="text-dark fw-bold">
+                                                        {{ $saving->user->name ?? 'N/A' }}
+                                                    </a>
+                                                    <br>
+                                                    <small class="text-muted">{{ $saving->user->member_id ?? '' }}</small>
+                                                </td>
+                                                <td>{{ number_format($saving->amount, 2) }}</td>
+                                                <td>{{ $saving->month }} - {{ $saving->year }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($saving->payment_date)->format('d M, Y') }}</td>
+                                                <td>
+                                                    <span class="badge bg-success">Paid</span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('savings.show', $saving->id) }}" class="btn btn-primary btn-sm" title="Show">
+                                                        <i class="fa fa-eye"></i>
+                                                    </a>
+
+                                                    @if (Auth::user()->isAdmin())
+                                                        <a href="{{ route('savings.edit', $saving->id) }}" class="btn btn-success btn-sm" title="Edit">
+                                                            <i class="fa fa-edit"></i>
+                                                        </a>
+                                                        
+                                                        <button type="button" onclick="deleteData({{ $saving->id }})" class="btn btn-danger btn-sm" title="Delete">
+                                                            <i class="fa fa-trash-alt"></i>
+                                                        </button>
+
+                                                        <form id="delete-form-{{ $saving->id }}" method="POST" action="{{ route('savings.destroy', $saving->id) }}" style="display: none;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                        </form>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
         </div>
+        <!-- container-fluid -->
     </div>
-</x-app-layout>
+    <!-- content -->
+@endsection

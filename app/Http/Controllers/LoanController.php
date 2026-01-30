@@ -1,10 +1,14 @@
 <?php
 
+
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class LoanController extends Controller
 {
@@ -12,9 +16,9 @@ class LoanController extends Controller
     {
         $user = Auth::user();
         if ($user->isAdmin()) {
-            $loans = Loan::with('user')->latest()->paginate(15);
+            $loans = Loan::with('user')->latest()->get();
         } else {
-            $loans = Loan::where('user_id', $user->id)->latest()->paginate(15);
+            $loans = Loan::where('user_id', $user->id)->with('user')->latest()->get();
         }
         return view('loans.index', compact('loans'));
     }
@@ -27,44 +31,149 @@ class LoanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'amount' => 'required|numeric|min:1000',
+            'amount' => 'required|numeric|min:100',
             'description' => 'nullable|string',
         ]);
 
-        Loan::create([
-            'user_id' => Auth::id(),
-            'amount' => $request->amount,
-            'interest_rate' => 0, // Standardize later
-            'total_payable' => $request->amount,
-            'status' => 'pending',
-            'description' => $request->description,
-        ]);
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('loans.index')->with('success', 'Loan request submitted.');
+            Loan::create([
+                'user_id' => Auth::id(),
+                'amount' => $request->amount,
+                'interest_rate' => 0, // Default 0 for now
+                'total_payable' => $request->amount, // Default same as amount
+                'status' => 'pending',
+                'description' => $request->description,
+            ]);
+
+            DB::commit();
+
+            notify()->success('Loan request submitted successfully.', 'Success');
+            return redirect()->route('loans.index');
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Loan Store Error: '.$e->getMessage());
+            notify()->error('Something went wrong! Please try again.', 'Error');
+            return back()->withInput();
+        }
     }
 
-    public function approve(Loan $loan)
+    public function show($id)
+    {
+        $loan = Loan::with('user')->findOrFail($id);
+
+        if (!Auth::user()->isAdmin() && $loan->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('loans.show', compact('loan'));
+    }
+
+    public function edit($id)
+    {
+        if (!Auth::user()->isAdmin()) {
+            abort(403);
+        }
+        $loan = Loan::findOrFail($id);
+        return view('loans.edit', compact('loan'));
+    }
+
+    public function update(Request $request, $id)
     {
         if (!Auth::user()->isAdmin()) {
             abort(403);
         }
 
-        $loan->update([
-            'status' => 'approved',
-            'disbursed_date' => now(),
+        $loan = Loan::findOrFail($id);
+
+        $request->validate([
+            'amount' => 'required|numeric|min:100',
+            'interest_rate' => 'required|numeric|min:0',
+            'total_payable' => 'required|numeric|min:0',
+            'status' => 'required|string',
+            'description' => 'nullable|string',
         ]);
 
-        return redirect()->route('loans.index')->with('success', 'Loan approved and disbursed.');
+        try {
+            DB::beginTransaction();
+
+            $loan->update($request->all());
+
+            DB::commit();
+
+            notify()->success('Loan updated successfully.', 'Success');
+            return redirect()->route('loans.index');
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            Log::error('Loan Update Error: '.$e->getMessage());
+            notify()->error('Something went wrong! Please try again.', 'Error');
+            return back()->withInput();
+        }
     }
 
-    public function reject(Loan $loan)
+    public function destroy($id)
     {
         if (!Auth::user()->isAdmin()) {
             abort(403);
         }
 
-        $loan->update(['status' => 'rejected']);
+        try {
+            $loan = Loan::findOrFail($id);
+            $loan->delete();
 
-        return redirect()->route('loans.index')->with('success', 'Loan application rejected.');
+            notify()->success('Loan deleted successfully.', 'Success');
+            return redirect()->back();
+
+        } catch (Exception $e) {
+            Log::error('Loan Delete Error: ' . $e->getMessage());
+            notify()->error('Something went wrong! Please try again.', 'Error');
+            return redirect()->back();
+        }
+    }
+
+    public function approve($id)
+    {
+        if (!Auth::user()->isAdmin()) {
+            abort(403);
+        }
+
+        try {
+            $loan = Loan::findOrFail($id);
+            $loan->update([
+                'status' => 'approved',
+                'disbursed_date' => now(),
+            ]);
+
+            notify()->success('Loan approved and disbursed.', 'Success');
+            return redirect()->back();
+
+        } catch (Exception $e) {
+            Log::error('Loan Approve Error: ' . $e->getMessage());
+            notify()->error('Something went wrong! Please try again.', 'Error');
+            return redirect()->back();
+        }
+    }
+
+    public function reject($id)
+    {
+        if (!Auth::user()->isAdmin()) {
+            abort(403);
+        }
+
+        try {
+            $loan = Loan::findOrFail($id);
+            $loan->update(['status' => 'rejected']);
+
+            notify()->success('Loan application rejected.', 'Success');
+            return redirect()->back();
+
+        } catch (Exception $e) {
+            Log::error('Loan Reject Error: ' . $e->getMessage());
+            notify()->error('Something went wrong! Please try again.', 'Error');
+            return redirect()->back();
+        }
     }
 }
