@@ -61,4 +61,10 @@ class MemberController extends Controller
             return back()->withInput();
         }
     }
+
+    public function show($id)
+    {
+        $member = User::findOrFail($id);
+        return view('members.show', compact('member'));
+    }
 }
