@@ -27,9 +27,11 @@
                 --text-main: #2d3436;
             }
             body { 
-                font-family: 'Public Sans', sans-serif; 
-                background-color: var(--bg-light);
-                color: var(--text-main);
+                background-repeat: repeat;
+                background: #f9f9f9;
+                font-family: "Poppins", sans-serif;
+                color: #354558;
+                font-size: 13px;
             }
             #wrapper { display: flex; width: 100%; align-items: stretch; }
             #sidebar {
@@ -143,6 +145,8 @@
                 #sidebar.active { margin-left: 0; }
             }
         </style>
+
+        @stack('styles')
     </head>
     <body class="antialiased">
         <div id="wrapper">
@@ -159,7 +163,7 @@
                         <h2 class="page-title">{{ $header }}</h2>
                     @endisset
 
-                    {{ $slot }}
+                    @yield('content')
 
                     <footer class="py-5 text-center text-muted small mt-5 border-top">
                         &copy; {{ date('Y') }} Saving Management System. Developed by Nextgen Innovation.
@@ -178,5 +182,7 @@
                 });
             });
         </script>
+
+        @stack('scripts')
     </body>
 </html>

@@ -18,7 +18,7 @@
             <a href="{{ route('members.index') }}">
                 <i class="far fa-user"></i>
                 <span>Members</span>
-                <i class="fas fa-chevron-right arrow"></i>
+                <!-- <i class="fas fa-chevron-right arrow"></i> -->
             </a>
         </li>
         @endif

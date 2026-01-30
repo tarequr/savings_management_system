@@ -1,8 +1,15 @@
-<x-app-layout>
-    <x-slot name="header">
-        {{ Auth::user()->isAdmin() ? 'Administration Dashboard' : 'Member Account Overview' }}
-    </x-slot>
+@extends('layouts.app')
 
+@section('styles')
+    <style>
+        .extra-small { font-size: 0.725rem; }
+        .list-group-item:last-child { border-bottom: none !important; }
+        .status-card { transition: transform 0.2s; }
+        .status-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+    </style>
+@endsection
+
+@section('content')
     <div class="row g-4 mb-5">
         @if(Auth::user()->isAdmin())
             <!-- Admin Stats Cards -->
@@ -208,11 +215,10 @@
             </div>
         @endif
     </div>
+@endsection
 
-    <style>
-        .extra-small { font-size: 0.725rem; }
-        .list-group-item:last-child { border-bottom: none !important; }
-        .status-card { transition: transform 0.2s; }
-        .status-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-    </style>
-</x-app-layout>
+@section('scripts')
+    <script>
+        // Add any dashboard-specific JavaScript here
+    </script>
+@endsection

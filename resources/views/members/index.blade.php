@@ -1,63 +1,120 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="font-semibold text-2xl text-indigo-800 leading-tight">
-                {{ __('Members Management') }}
-            </h2>
-            <a href="{{ route('members.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150">
-                Add New Member
-            </a>
-        </div>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12 bg-gray-50 min-h-screen">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            @if(session('success'))
-                <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-xl relative shadow-sm" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
-                </div>
-            @endif
+@push('styles')
+@endpush
 
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead class="bg-gray-50 text-gray-600 text-sm uppercase">
-                            <tr>
-                                <th class="px-6 py-4 font-medium">SL</th>
-                                <th class="px-6 py-4 font-medium">Name</th>
-                                <th class="px-6 py-4 font-medium">Email</th>
-                                <th class="px-6 py-4 font-medium">Phone</th>
-                                <th class="px-6 py-4 font-medium">Status</th>
-                                <th class="px-6 py-4 font-medium">Joined</th>
-                                <th class="px-6 py-4 font-medium text-right">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-gray-100 uppercase-first">
-                            @foreach($members as $index => $member)
-                            <tr class="hover:bg-gray-50 transition-colors">
-                                <td class="px-6 py-4 text-gray-500 font-mono text-sm">{{ $members->firstItem() + $index }}</td>
-                                <td class="px-6 py-4 text-gray-800 font-bold capitalize">{{ $member->name }}</td>
-                                <td class="px-6 py-4 text-gray-600">{{ $member->email }}</td>
-                                <td class="px-6 py-4 text-gray-600 font-mono">{{ $member->phone ?? '---' }}</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 text-xs rounded-full font-bold {{ $member->status == 'active' ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600' }}">
-                                        {{ strtoupper($member->status) }}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-500">{{ $member->created_at->format('d M, Y') }}</td>
-                                <td class="px-6 py-4 text-right space-x-2">
-                                    <button class="text-indigo-600 hover:text-indigo-900 font-bold text-sm">Edit</button>
-                                    <button class="text-red-500 hover:text-red-700 font-bold text-sm">Delete</button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="px-6 py-4 bg-gray-50">
-                    {{ $members->links() }}
-                </div>
+@section('content')
+    <!-- Start content -->
+    <div class="content">
+        <div class="container-fluid">
+            <div class="page-title-box">
+                <div class="row align-items-center">
+                    <div class="col-sm-6">
+                        <h4 class="page-title">Members Manage</h4>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class=" float-right">
+                            @if (Auth::user()->isAdmin())
+                            <a href="{{ route('members.create') }}" class="btn-shadow btn btn-sm btn-primary">
+                                <i class="fa fa-plus-circle"></i>
+                                Create
+                            </a>
+                            @endif
+                        </ol>
+                    </div>
+                </div> <!-- end row -->
             </div>
+            <!-- end page-title -->
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card m-b-30">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="datatable" class="table table-bordered dt-responsive nowrap"
+                                    style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">#SL</th>
+                                            <th class="text-center">Name</th>
+                                            <th class="text-center">E-mail</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-center">Joined At</th>
+                                            <th class="text-center">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        @foreach($members as $key => $user)
+                                            <tr>
+                                                <td class="text-center text-muted">#{{ $key + 1 }}</td>
+                                                <td>
+                                                    <div class="widget-content p-0">
+                                                        <div class="widget-content-wrapper">
+                                                            <div class="widget-content-left mr-3">
+                                                                <div class="widget-content-left">
+                                                                    <img  width="40" class="rounded-circle"
+                                                                    src="{{ $user->avatar != null ? asset('upload/user_images/'.$user->avatar) : asset('assets/images/placeholder.png') }}" alt="User Avatar">
+                                                                </div>
+                                                            </div>
+                                                            <div class="widget-content-left flex2">
+                                                                <div class="widget-heading">{{ $user->name }}</div>
+                                                                <div class="widget-subheading opacity-7">
+                                                                   
+                                                                        <span class="badge bg-warning text-dark">No role found &#128546;</span>
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center">{{ $user->email }}</td>
+                                                <td class="text-center">
+                                                    @if($user->status == true)
+                                                        <span class="badge badge-success">Active</span>
+                                                    @else
+                                                        <span class="badge badge-danger">Inactive</span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">{{ $user->created_at->diffForHumans() }}</td>
+                                                <td class="text-center">
+                                                    
+                                                            <a href="{{ route('members.show',$user->id) }}" class="btn btn-primary btn-sm" title="Edit">
+                                                                <i class="fa fa-eye"></i>
+                                                                <span>Show</span>
+                                                            </a>
+
+                                                            <a href="{{ route('members.edit',$user->id) }}" class="btn btn-success btn-sm" title="Edit">
+                                                                <i class="fa fa-edit"></i>
+                                                                <span>Edit</span>
+                                                            </a>
+                                                            
+                                                            <button type="button" onclick="deleteData({{ $user->id }})" class="btn btn-danger btn-sm" title="Delete">
+                                                                <i class="fa fa-trash-alt"></i>
+                                                                <span>Delete</span>
+                                                            </button>
+
+                                                    <form id="delete-form-{{ $user->id }}" method="POST" action="{{ route('members.destroy',$user->id) }}" style="display: none;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
         </div>
+        <!-- container-fluid -->
     </div>
-</x-app-layout>
+    <!-- content -->
+@endsection
+
+@push('scripts')
+<script>
+    
+</script>
+@endpush
