@@ -25,16 +25,23 @@ class MemberController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'phone' => 'nullable|string|max:20',
             'password' => 'required|string|min:8|confirmed',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'password' => bcrypt($request->password),
-            'role' => 'member',
-            'status' => 'active',
-        ]);
+        $data = $request->all();
+
+        if ($request->hasFile('photo')) {
+            $image = $request->file('photo');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('upload/members'), $filename);
+            $data['photo'] = $filename;
+        }
+
+        $data['password'] = bcrypt($request->password);
+        $data['role'] = 'member';
+        $data['status'] = true;
+
+        User::create($data);
 
         return redirect()->route('members.index')->with('success', 'Member created successfully.');
     }

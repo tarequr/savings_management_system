@@ -19,7 +19,18 @@ return new class extends Migration
             $table->string('password');
             $table->string('role')->default('member'); // admin, member
             $table->string('phone')->nullable();
-            $table->string('status')->default('active'); // active, inactive
+            $table->string('address')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('date_of_birth')->nullable();
+            $table->string('photo')->nullable();
+            $table->string('nid_number')->nullable();
+            $table->string('nominee_name')->nullable();
+            $table->string('nominee_relation')->nullable();
+            $table->string('nominee_phone')->nullable();
+            $table->string('nominee_address')->nullable();
+            $table->string('nominee_photo')->nullable();
+            $table->string('nominee_nid_number')->nullable();
+            $table->boolean('status')->default(true); // active, inactive
             $table->rememberToken();
             $table->timestamps();
         });

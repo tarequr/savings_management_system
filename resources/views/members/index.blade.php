@@ -13,7 +13,7 @@
                         <h4 class="page-title">Members Manage</h4>
                     </div>
                     <div class="col-sm-6">
-                        <ol class=" float-right">
+                        <ol class="float-end">
                             @if (Auth::user()->isAdmin())
                             <a href="{{ route('members.create') }}" class="btn-shadow btn btn-sm btn-primary">
                                 <i class="fa fa-plus-circle"></i>
@@ -44,7 +44,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="text-center">
-                                        @foreach($members as $key => $user)
+                                        @foreach($members as $key => $member)
                                             <tr>
                                                 <td class="text-center text-muted">#{{ $key + 1 }}</td>
                                                 <td>
@@ -53,47 +53,45 @@
                                                             <div class="widget-content-left mr-3">
                                                                 <div class="widget-content-left">
                                                                     <img  width="40" class="rounded-circle"
-                                                                    src="{{ $user->avatar != null ? asset('upload/user_images/'.$user->avatar) : asset('assets/images/placeholder.png') }}" alt="User Avatar">
+                                                                    src="{{ $member->photo != null ? asset('upload/members/'.$member->photo) : asset('assets/images/placeholder.png') }}" alt="{{ $member->name }}">
                                                                 </div>
                                                             </div>
                                                             <div class="widget-content-left flex2">
-                                                                <div class="widget-heading">{{ $user->name }}</div>
+                                                                <div class="widget-heading">{{ $member->name }}</div>
                                                                 <div class="widget-subheading opacity-7">
-                                                                   
-                                                                        <span class="badge bg-warning text-dark">No role found &#128546;</span>
-                                                                    
+                                                                    <span class="badge bg-info">{{ ucfirst($member->role) }}</span>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="text-center">{{ $user->email }}</td>
+                                                <td class="text-center">{{ $member->email }}</td>
                                                 <td class="text-center">
-                                                    @if($user->status == true)
+                                                    @if($member->status == true)
                                                         <span class="badge badge-success">Active</span>
                                                     @else
                                                         <span class="badge badge-danger">Inactive</span>
                                                     @endif
                                                 </td>
-                                                <td class="text-center">{{ $user->created_at->diffForHumans() }}</td>
+                                                <td class="text-center">{{ $member->created_at->diffForHumans() }}</td>
                                                 <td class="text-center">
                                                     
-                                                            <a href="{{ route('members.show',$user->id) }}" class="btn btn-primary btn-sm" title="Edit">
+                                                            <a href="{{ route('members.show',$member->id) }}" class="btn btn-primary btn-sm" title="Edit">
                                                                 <i class="fa fa-eye"></i>
                                                                 <span>Show</span>
                                                             </a>
 
-                                                            <a href="{{ route('members.edit',$user->id) }}" class="btn btn-success btn-sm" title="Edit">
+                                                            <a href="{{ route('members.edit',$member->id) }}" class="btn btn-success btn-sm" title="Edit">
                                                                 <i class="fa fa-edit"></i>
                                                                 <span>Edit</span>
                                                             </a>
                                                             
-                                                            <button type="button" onclick="deleteData({{ $user->id }})" class="btn btn-danger btn-sm" title="Delete">
+                                                            <button type="button" onclick="deleteData({{ $member->id }})" class="btn btn-danger btn-sm" title="Delete">
                                                                 <i class="fa fa-trash-alt"></i>
                                                                 <span>Delete</span>
                                                             </button>
 
-                                                    <form id="delete-form-{{ $user->id }}" method="POST" action="{{ route('members.destroy',$user->id) }}" style="display: none;">
+                                                    <form id="delete-form-{{ $member->id }}" method="POST" action="{{ route('members.destroy',$member->id) }}" style="display: none;">
                                                         @csrf
                                                         @method('DELETE')
                                                     </form>
