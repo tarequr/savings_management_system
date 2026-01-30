@@ -112,7 +112,19 @@
                 border-radius: 8px;
             }
             
-            #content { width: 100%; padding: 0; min-height: 100vh; transition: all 0.3s; }
+            #content {
+                width: 100%;
+                padding: 0;
+                min-height: 100vh;
+                transition: all 0.3s;
+                display: flex;
+                flex-direction: column;
+            }
+            .content-area {
+                padding: 2rem;
+                flex: 1;
+            }
+            
             .navbar { 
                 padding: 1rem 1.5rem; 
                 background: #ffffff; 
@@ -120,7 +132,6 @@
                 box-shadow: 0 1px 3px rgba(0,0,0,0.02);
             }
             
-            .content-area { padding: 2rem; }
             .page-title { 
                 font-weight: 700; 
                 font-size: 1.5rem;
@@ -140,9 +151,20 @@
                 padding: 0.5rem 1rem;
             }
 
+            .footer {
+                background: #fff;
+                color: #74788d;
+                border-top: 1px solid #eff2f7;
+                padding: 20px calc(24px / 2);
+                height: 60px;
+                display: flex;
+                align-items: center;
+            }
+
             @media (max-width: 768px) {
                 #sidebar { margin-left: -260px; }
                 #sidebar.active { margin-left: 0; }
+                .footer { height: auto; text-align: center; }
             }
         </style>
 
@@ -168,10 +190,9 @@
 
                     @yield('content')
 
-                    <footer class="py-5 text-center text-muted small mt-5 border-top">
-                        &copy; {{ date('Y') }} Saving Management System. Developed by Nextgen Innovation.
-                    </footer>
                 </div>
+
+                @include('layouts.footer')
             </div>
         </div>
 
