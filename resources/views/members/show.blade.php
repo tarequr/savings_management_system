@@ -33,7 +33,12 @@
                                              style="width: 150px; height: 150px; object-fit: cover;">
                                     </div>
                                     <h4 class="font-size-20 mb-1">{{ $member->name }}</h4>
-                                    <p class="text-muted mb-3">{{ $member->email }}</p>
+                                    <p class="text-muted mb-2">{{ $member->email }}</p>
+                                    <div class="mb-3">
+                                        <span class="badge rounded-pill bg-white border border-primary text-primary px-3 py-2" style="font-size: 0.9rem; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                                            <i class="fa fa-id-card me-1"></i> ID: {{ $member->member_id ?? 'N/A' }}
+                                        </span>
+                                    </div>
 
                                     <div class="d-flex justify-content-center gap-2 mb-3">
                                         <span class="badge {{ $member->status ? 'bg-success' : 'bg-danger' }}">
@@ -73,6 +78,10 @@
                                     <div class="table-responsive">
                                         <table class="table table-nowrap table-hover mb-0">
                                             <tbody>
+                                                <tr>
+                                                    <th scope="row" style="width: 200px;">Member ID :</th>
+                                                    <td><span class="badge bg-primary">{{ $member->member_id ?? 'N/A' }}</span></td>
+                                                </tr>
                                                 <tr>
                                                     <th scope="row" style="width: 200px;">Full Name :</th>
                                                     <td>{{ $member->name }}</td>

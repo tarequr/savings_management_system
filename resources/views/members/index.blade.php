@@ -36,6 +36,7 @@
                                     <thead>
                                         <tr>
                                             <th class="text-center">#SL</th>
+                                            <th class="text-center">Member ID</th>
                                             <th class="text-center">Name</th>
                                             <th class="text-center">Phone</th>
                                             <th class="text-center">Total Deposit</th>
@@ -50,6 +51,7 @@
                                         @foreach($members as $key => $member)
                                             <tr>
                                                 <td class="text-center text-muted" data-order="{{ $key + 1 }}">#{{ $key + 1 }}</td>
+                                                <td class="text-center fw-bold text-primary">{{ $member->member_id ?? 'N/A' }}</td>
                                                 <td>
                                                     <div class="widget-content p-0">
                                                         <div class="widget-content-wrapper">

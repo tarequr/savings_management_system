@@ -51,6 +51,10 @@ class MemberController extends Controller
             $data['role'] = 'member';
             $data['status'] = true;
 
+            // Generate Member ID
+            $lastMember = User::where('role', 'member')->whereNotNull('member_id')->orderByRaw('CAST(member_id AS UNSIGNED) DESC')->first();
+            $data['member_id'] = $lastMember ? $lastMember->member_id + 1 : 1001;
+
             User::create($data);
 
             DB::commit();
