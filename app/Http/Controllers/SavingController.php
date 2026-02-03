@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Saving;
 use App\Models\User;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -83,7 +84,10 @@ class SavingController extends Controller
         try {
             DB::beginTransaction();
 
-            Saving::create($request->all() + ['status' => 'paid']);
+            $saving = Saving::create($request->all() + ['status' => 'paid']);
+            $user = User::where('id', $request->user_id)->first(); 
+
+            ActivityLog::log('added_saving', 'Added saving of ' . $request->amount . ' for user Name ' . $user->name . ' and Member ID ' . $user->member_id);
 
             DB::commit();
 
@@ -143,6 +147,8 @@ class SavingController extends Controller
 
             $saving->update($request->all());
 
+            ActivityLog::log('updated_saving', 'Updated saving ID ' . $saving->id . '. New Amount: ' . $request->amount);
+
             DB::commit();
 
             notify()->success('Saving record updated successfully.', 'Success');
@@ -165,6 +171,8 @@ class SavingController extends Controller
         try {
             $saving = Saving::findOrFail($id);
             $saving->delete();
+
+            ActivityLog::log('deleted_saving', 'Deleted saving ID ' . $saving->id);
 
             notify()->success('Saving record deleted successfully.', 'Success');
             return redirect()->back();

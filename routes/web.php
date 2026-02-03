@@ -7,6 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\LoanController;
+use App\Http\Controllers\ActivityReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -31,6 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('loans', LoanController::class);
     Route::post('loans/{loan}/approve', [LoanController::class, 'approve'])->name('loans.approve');
     Route::post('loans/{loan}/reject', [LoanController::class, 'reject'])->name('loans.reject');
+    // Reports
+    Route::get('reports/activity', [ActivityReportController::class, 'index'])->name('reports.activity');
 });
 
 require __DIR__.'/auth.php';

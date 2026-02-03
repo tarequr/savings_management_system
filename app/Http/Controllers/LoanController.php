@@ -4,6 +4,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Loan;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -48,6 +49,8 @@ class LoanController extends Controller
             ]);
 
             DB::commit();
+
+            ActivityLog::log('loan_application', 'Applied for loan of ' . $request->amount);
 
             notify()->success('Loan request submitted successfully.', 'Success');
             return redirect()->route('loans.index');
@@ -103,6 +106,8 @@ class LoanController extends Controller
 
             DB::commit();
 
+            ActivityLog::log('updated_loan', 'Updated loan ID ' . $loan->id);
+
             notify()->success('Loan updated successfully.', 'Success');
             return redirect()->route('loans.index');
 
@@ -123,6 +128,8 @@ class LoanController extends Controller
         try {
             $loan = Loan::findOrFail($id);
             $loan->delete();
+            
+            ActivityLog::log('deleted_loan', 'Deleted loan ID ' . $id);
 
             notify()->success('Loan deleted successfully.', 'Success');
             return redirect()->back();
@@ -147,6 +154,8 @@ class LoanController extends Controller
                 'disbursed_date' => now(),
             ]);
 
+            ActivityLog::log('approved_loan', 'Approved loan ID ' . $loan->id);
+
             notify()->success('Loan approved and disbursed.', 'Success');
             return redirect()->back();
 
@@ -166,6 +175,8 @@ class LoanController extends Controller
         try {
             $loan = Loan::findOrFail($id);
             $loan->update(['status' => 'rejected']);
+
+            ActivityLog::log('rejected_loan', 'Rejected loan ID ' . $loan->id);
 
             notify()->success('Loan application rejected.', 'Success');
             return redirect()->back();

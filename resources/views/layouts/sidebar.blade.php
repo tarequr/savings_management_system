@@ -47,8 +47,8 @@
         </li>
 
         <li class="section-title mt-3">REPORTS</li>
-        <li>
-            <a href="#">
+        <li class="{{ request()->routeIs('reports.activity') ? 'active' : '' }}">
+            <a href="{{ route('reports.activity') }}">
                 <i class="far fa-file-alt"></i>
                 <span>Activity Report</span>
             </a>

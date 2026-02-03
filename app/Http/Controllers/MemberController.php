@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\ActivityLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -56,6 +57,8 @@ class MemberController extends Controller
             $data['member_id'] = $lastMember ? $lastMember->member_id + 1 : 1001;
 
             User::create($data);
+
+            ActivityLog::log('created_member', 'Created new member: ' . $data['name']);
 
             DB::commit();
 
@@ -125,6 +128,8 @@ class MemberController extends Controller
 
             $member->update($data);
 
+            ActivityLog::log('updated_member', 'Updated member: ' . $member->name);
+
             DB::commit();
 
             notify()->success('Member updated successfully.', 'Success');
@@ -148,6 +153,8 @@ class MemberController extends Controller
             }
 
             $member->delete();
+
+            ActivityLog::log('deleted_member', 'Deleted member: ' . $member->name);
 
             notify()->success('Member deleted successfully.', 'Success');
             return redirect()->back();
