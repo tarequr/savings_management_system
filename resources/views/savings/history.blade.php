@@ -7,15 +7,12 @@
             <div class="page-title-box">
                 <div class="row align-items-center">
                     <div class="col-sm-6">
-                        <h4 class="page-title">{{ $pageTitle ?? 'Savings Management' }}</h4>
+                        <h4 class="page-title">{{ $pageTitle ?? 'Savings History' }}</h4>
                     </div>
                     <div class="col-sm-6">
-                        <ol class="float-end">
-                            @if (Auth::user()->isAdmin())
-                            <a href="{{ route('savings.create') }}" class="btn btn-primary btn-sm btn-shadow">
-                                <i class="fa fa-plus-circle"></i> Add Saving
-                            </a>
-                            @endif
+                        <ol class="breadcrumb float-end">
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Savings History</li>
                         </ol>
                     </div>
                 </div> <!-- end row -->
@@ -61,21 +58,6 @@
                                                     <a href="{{ route('savings.show', $saving->id) }}" class="btn btn-primary btn-sm" title="Show">
                                                         <i class="fa fa-eye"></i>
                                                     </a>
-
-                                                    @if (Auth::user()->isAdmin())
-                                                        <a href="{{ route('savings.edit', $saving->id) }}" class="btn btn-success btn-sm" title="Edit">
-                                                            <i class="fa fa-edit"></i>
-                                                        </a>
-                                                        
-                                                        <button type="button" onclick="deleteData({{ $saving->id }})" class="btn btn-danger btn-sm" title="Delete">
-                                                            <i class="fa fa-trash-alt"></i>
-                                                        </button>
-
-                                                        <form id="delete-form-{{ $saving->id }}" method="POST" action="{{ route('savings.destroy', $saving->id) }}" style="display: none;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
-                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach

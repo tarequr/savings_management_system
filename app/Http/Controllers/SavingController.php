@@ -16,12 +16,44 @@ class SavingController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $currentMonth = now()->format('F'); // Full month name like "February"
+        $currentYear = now()->year;
+
+        if ($user->isAdmin()) {
+            $savings = Saving::with('user')
+                ->where('month', $currentMonth)
+                ->where('year', $currentYear)
+                ->latest()
+                ->get();
+        } else {
+            $savings = Saving::where('user_id', $user->id)
+                ->where('month', $currentMonth)
+                ->where('year', $currentYear)
+                ->with('user')
+                ->latest()
+                ->get();
+        }
+
+        $pageTitle = "Savings Management (" . $currentMonth . " - " . $currentYear . ")";
+        $isHistory = false;
+        
+        return view('savings.index', compact('savings', 'pageTitle', 'isHistory'));
+    }
+
+    public function history()
+    {
+        $user = Auth::user();
+
         if ($user->isAdmin()) {
             $savings = Saving::with('user')->latest()->get();
         } else {
             $savings = Saving::where('user_id', $user->id)->with('user')->latest()->get();
         }
-        return view('savings.index', compact('savings'));
+
+        $pageTitle = "Savings History (All Records)";
+        $isHistory = true;
+
+        return view('savings.history', compact('savings', 'pageTitle', 'isHistory'));
     }
 
     public function create()

@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Savings & Loans
+    Route::get('savings/history', [SavingController::class, 'history'])->name('savings.history');
     Route::resource('savings', SavingController::class);
     Route::resource('loans', LoanController::class);
     Route::post('loans/{loan}/approve', [LoanController::class, 'approve'])->name('loans.approve');

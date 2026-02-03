@@ -24,11 +24,17 @@
         @endif
 
         <li class="section-title mt-3">MAIN</li>
-        <li class="{{ request()->routeIs('savings.*') ? 'active' : '' }}">
+        <li class="{{ request()->routeIs('savings.index', 'savings.create', 'savings.edit', 'savings.show') ? 'active' : '' }}">
             <a href="{{ route('savings.index') }}">
                 <i class="far fa-gem"></i>
                 <span>Savings Management</span>
-                <!-- <i class="fas fa-chevron-right arrow"></i> -->
+            </a>
+        </li>
+
+        <li class="{{ request()->routeIs('savings.history') ? 'active' : '' }}">
+            <a href="{{ route('savings.history') }}">
+                <i class="fas fa-history"></i>
+                <span>Savings History</span>
             </a>
         </li>
 
