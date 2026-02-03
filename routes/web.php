@@ -10,7 +10,7 @@ use App\Http\Controllers\LoanController;
 use App\Http\Controllers\ActivityReportController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
