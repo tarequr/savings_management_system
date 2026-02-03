@@ -47,6 +47,24 @@
                                             <i class="fa fa-edit"></i> Edit Member
                                         </a>
                                     </div>
+                                    
+                                    <div class="card mt-3 bg-light">
+                                        <div class="card-body p-3">
+                                            <h6 class="text-muted mb-3 text-center">Financial Summary</h6>
+                                            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                                                <span>Total Deposit:</span>
+                                                <span class="fw-bold text-success">{{ number_format($member->savings_sum_amount ?? 0) }}</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between border-bottom pb-2 mb-2">
+                                                <span>Total Loan:</span>
+                                                <span class="fw-bold text-danger">{{ number_format($member->loans_sum_amount ?? 0) }}</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <span>Balance:</span>
+                                                <span class="fw-bold text-primary">{{ number_format(($member->savings_sum_amount ?? 0) - ($member->loans_sum_amount ?? 0)) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-8">
                                     <h5 class="font-size-16 mb-4 mt-2">Personal Information</h5>

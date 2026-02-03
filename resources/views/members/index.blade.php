@@ -37,7 +37,9 @@
                                         <tr>
                                             <th class="text-center">#SL</th>
                                             <th class="text-center">Name</th>
-                                            <th class="text-center">E-mail</th>
+                                            <th class="text-center">Email</th>
+                                            <th class="text-center">Total Deposit</th>
+                                            <th class="text-center">Total Loan</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Joined At</th>
                                             <th class="text-center">Actions</th>
@@ -66,6 +68,8 @@
                                                     </div>
                                                 </td>
                                                 <td class="text-center">{{ $member->email }}</td>
+                                                <td class="text-center fw-bold text-success">{{ number_format($member->savings_sum_amount ?? 0) }}</td>
+                                                <td class="text-center fw-bold text-danger">{{ number_format($member->loans_sum_amount ?? 0) }}</td>
                                                 <td class="text-center">
                                                     @if($member->status == true)
                                                         <span class="badge badge-success">Active</span>

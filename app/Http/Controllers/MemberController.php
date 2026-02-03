@@ -12,7 +12,11 @@ class MemberController extends Controller
 {
     public function index()
     {
-        $members = User::where('role', 'member')->latest()->get();
+        $members = User::where('role', 'member')
+            ->withSum('savings', 'amount')
+            ->withSum('loans', 'amount')
+            ->latest()
+            ->get();
         return view('members.index', compact('members'));
     }
 
@@ -64,7 +68,9 @@ class MemberController extends Controller
 
     public function show($id)
     {
-        $member = User::findOrFail($id);
+        $member = User::withSum('savings', 'amount')
+            ->withSum('loans', 'amount')
+            ->findOrFail($id);
         return view('members.show', compact('member'));
     }
 
