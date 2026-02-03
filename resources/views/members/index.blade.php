@@ -37,9 +37,10 @@
                                         <tr>
                                             <th class="text-center">#SL</th>
                                             <th class="text-center">Name</th>
-                                            <th class="text-center">Email</th>
+                                            <th class="text-center">Phone</th>
                                             <th class="text-center">Total Deposit</th>
                                             <th class="text-center">Total Loan</th>
+                                            <th class="text-center">Balance</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-center">Joined At</th>
                                             <th class="text-center">Actions</th>
@@ -67,14 +68,22 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td class="text-center">{{ $member->email }}</td>
+                                                <td class="text-center">{{ $member->phone }}</td>
                                                 <td class="text-center fw-bold text-success">{{ number_format($member->savings_sum_amount ?? 0) }}</td>
                                                 <td class="text-center fw-bold text-danger">{{ number_format($member->loans_sum_amount ?? 0) }}</td>
+                                                
+                                                @php
+                                                    $balance = ($member->savings_sum_amount ?? 0) - ($member->loans_sum_amount ?? 0);
+                                                @endphp
+                                                <td class="text-center fw-bold {{ $balance >= 0 ? 'text-primary' : 'text-danger' }}">
+                                                    {{ number_format($balance) }}
+                                                </td>
+
                                                 <td class="text-center">
                                                     @if($member->status == true)
-                                                        <span class="badge badge-success">Active</span>
+                                                        <span class="badge bg-success">Active</span>
                                                     @else
-                                                        <span class="badge badge-danger">Inactive</span>
+                                                        <span class="badge bg-danger">Inactive</span>
                                                     @endif
                                                 </td>
                                                 <td class="text-center">{{ $member->created_at->diffForHumans() }}</td>

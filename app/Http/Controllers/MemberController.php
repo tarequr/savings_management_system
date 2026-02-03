@@ -70,6 +70,9 @@ class MemberController extends Controller
     {
         $member = User::withSum('savings', 'amount')
             ->withSum('loans', 'amount')
+            ->with(['loans' => function($query) {
+                $query->latest();
+            }])
             ->findOrFail($id);
         return view('members.show', compact('member'));
     }

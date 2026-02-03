@@ -16,6 +16,10 @@ class Saving extends Model
         'remarks',
     ];
 
+    protected $casts = [
+        'payment_date' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

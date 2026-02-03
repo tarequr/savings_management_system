@@ -17,6 +17,10 @@ class Loan extends Model
         'description',
     ];
 
+    protected $casts = [
+        'disbursed_date' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

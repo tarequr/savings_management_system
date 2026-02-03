@@ -66,6 +66,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-md-8">
                                     <h5 class="font-size-16 mb-4 mt-2">Personal Information</h5>
                                     
@@ -92,6 +93,46 @@
                                                     <th scope="row">Last Updated :</th>
                                                     <td>{{ $member->updated_at->diffForHumans() }}</td>
                                                 </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <h5 class="font-size-16 mb-3 mt-4">Loan History</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped mb-0">
+                                            <thead class="bg-light">
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Amount</th>
+                                                    <th>Payable</th>
+                                                    <th>Paid</th>
+                                                    <th>Balance</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @forelse($member->loans as $loan)
+                                                    <tr>
+                                                        <td>{{ \Carbon\Carbon::parse($loan->disbursed_date ?? $loan->created_at)->format('d M, Y') }}</td>
+                                                        <td class="fw-bold">{{ number_format($loan->amount) }}</td>
+                                                        <td>{{ number_format($loan->total_payable) }}</td>
+                                                        <td class="text-success">{{ number_format($loan->paid_amount) }}</td>
+                                                        <td class="text-danger">{{ number_format($loan->total_payable - $loan->paid_amount) }}</td>
+                                                        <td>
+                                                            @if($loan->status == 'approved' || $loan->status == 1)
+                                                                <span class="badge bg-success">Active</span>
+                                                            @elseif($loan->status == 'pending')
+                                                                <span class="badge bg-warning">Pending</span>
+                                                            @else
+                                                                <span class="badge bg-secondary">{{ $loan->status }}</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="6" class="text-center text-muted">No loan history found.</td>
+                                                    </tr>
+                                                @endforelse
                                             </tbody>
                                         </table>
                                     </div>
