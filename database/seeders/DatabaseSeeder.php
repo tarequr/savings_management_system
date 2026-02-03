@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'member',
                 'phone' => '01234567891',
+                'member_id' => 1001,
             ],
             [
                 'name' => 'Taiyebur Rahman Tipu',
@@ -37,6 +38,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'member',
                 'phone' => '01234567892',
+                'member_id' => 1002,
             ],
             [
                 'name' => 'Tarequr Rahman Sabbir',
@@ -44,6 +46,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'member',
                 'phone' => '01234567893',
+                'member_id' => 1003,
             ],
             [
                 'name' => 'Sohag Sarder',
@@ -51,6 +54,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'member',
                 'phone' => '01234567894',
+                'member_id' => 1004,
             ],
             [
                 'name' => 'Humaun Kabir',
@@ -58,6 +62,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'member',
                 'phone' => '01234567895',
+                'member_id' => 1005,
             ],
             [
                 'name' => 'Tanjim Hasan Radin',
@@ -65,6 +70,7 @@ class DatabaseSeeder extends Seeder
                 'password' => bcrypt('password'),
                 'role' => 'member',
                 'phone' => '01234567896',
+                'member_id' => 1006,
             ]
         ];
 
