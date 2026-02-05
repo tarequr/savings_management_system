@@ -1,5 +1,23 @@
 @extends('layouts.app')
 
+@push('styles')
+<style>
+    @media print {
+        .side-menu, .topbar, .footer, .btn, .row.mb-4 {
+            display: none !important;
+        }
+        .content-page {
+            margin-left: 0 !important;
+            padding: 0 !important;
+        }
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+    }
+</style>
+@endpush
+
 @section('content')
     <div class="content">
         <div class="container-fluid">
@@ -7,6 +25,12 @@
                 <div class="row align-items-center">
                     <div class="col-sm-6">
                         <h4 class="page-title">{{ $pageTitle }}</h4>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="float-end">
+                            <button onclick="window.print()" class="btn btn-dark btn-sm me-1"><i class="fas fa-print"></i> Print</button>
+                            <a href="{{ route('reports.loans.pdf', request()->all()) }}" class="btn btn-danger btn-sm"><i class="fas fa-file-pdf"></i> Download PDF</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -46,6 +70,7 @@
                                 </div>
                                 <div class="col-md-2 mb-2 d-flex align-items-end">
                                     <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter"></i> Filter</button>
+                                    <a href="{{ route('reports.loans') }}" class="btn btn-secondary ms-2 w-100">Reset</a>
                                 </div>
                             </form>
 

@@ -37,7 +37,9 @@ Route::middleware('auth')->group(function () {
     // Reports
     Route::get('reports/activity', [ActivityReportController::class, 'index'])->name('reports.activity');
     Route::get('reports/savings', [ReportController::class, 'savingsReport'])->name('reports.savings');
+    Route::get('reports/savings/pdf', [ReportController::class, 'exportSavingsPDF'])->name('reports.savings.pdf');
     Route::get('reports/loans', [ReportController::class, 'loansReport'])->name('reports.loans');
+    Route::get('reports/loans/pdf', [ReportController::class, 'exportLoansPDF'])->name('reports.loans.pdf');
 });
 
 require __DIR__.'/auth.php';

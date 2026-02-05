@@ -33,7 +33,7 @@
                     </div>
 
                     <!-- Password Update Card -->
-                    <div class="card shadow-sm border-0 m-b-30">
+                    <div class="card shadow-sm border-0 m-b-30 mt-4">
                         <div class="card-header bg-white border-bottom">
                             <h5 class="card-title text-primary mb-0"><i class="fas fa-key me-2"></i> {{ __('Change Password') }}</h5>
                         </div>
