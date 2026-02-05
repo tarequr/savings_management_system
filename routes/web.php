@@ -8,6 +8,7 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\SavingController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\ActivityReportController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::post('loans/{loan}/reject', [LoanController::class, 'reject'])->name('loans.reject');
     // Reports
     Route::get('reports/activity', [ActivityReportController::class, 'index'])->name('reports.activity');
+    Route::get('reports/savings', [ReportController::class, 'savingsReport'])->name('reports.savings');
+    Route::get('reports/loans', [ReportController::class, 'loansReport'])->name('reports.loans');
 });
 
 require __DIR__.'/auth.php';

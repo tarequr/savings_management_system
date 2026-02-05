@@ -53,6 +53,18 @@
                 <span>Activity Report</span>
             </a>
         </li>
+        <li class="{{ request()->routeIs('reports.savings') ? 'active' : '' }}">
+            <a href="{{ route('reports.savings') }}">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Savings Report</span>
+            </a>
+        </li>
+        <li class="{{ request()->routeIs('reports.loans') ? 'active' : '' }}">
+            <a href="{{ route('reports.loans') }}">
+                <i class="fas fa-file-contract"></i>
+                <span>Loan Report</span>
+            </a>
+        </li>
 
         <li class="section-title mt-3">SETTINGS</li>
         <li class="{{ request()->routeIs('profile.edit') ? 'active' : '' }}">
