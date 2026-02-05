@@ -143,6 +143,24 @@ class MemberController extends Controller
         }
     }
 
+    public function updateStatus($id)
+    {
+        try {
+            $member = User::findOrFail($id);
+            $member->status = !$member->status;
+            $member->save();
+
+            ActivityLog::log('updated_member_status', 'Updated member status: ' . $member->name . ' to ' . ($member->status ? 'Active' : 'Inactive'));
+
+            notify()->success('Member status updated successfully.', 'Success');
+            return redirect()->back();
+        } catch (Exception $e) {
+            Log::error('Member Status Update Error: ' . $e->getMessage());
+            notify()->error('Something went wrong! Please try again.', 'Error');
+            return redirect()->back();
+        }
+    }
+
     public function destroy($id)
     {
         try {

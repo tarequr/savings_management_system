@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function () {
 
     // Member Management (Admin Only)
     Route::middleware(['auth'])->group(function() {
+        Route::put('members/{id}/status', [MemberController::class, 'updateStatus'])->name('members.updateStatus');
         Route::resource('members', MemberController::class);
     });
 

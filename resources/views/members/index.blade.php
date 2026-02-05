@@ -91,19 +91,30 @@
                                                 <td class="text-center">{{ $member->created_at->diffForHumans() }}</td>
                                                 <td class="text-center">
                                                     
-                                                            <a href="{{ route('members.show',$member->id) }}" class="btn btn-primary btn-sm" title="Edit">
+                                                            <a href="{{ route('members.show',$member->id) }}" class="btn btn-primary btn-sm" title="Details">
                                                                 <i class="fa fa-eye"></i>
-                                                                <span>Show</span>
                                                             </a>
 
                                                             <a href="{{ route('members.edit',$member->id) }}" class="btn btn-success btn-sm" title="Edit">
                                                                 <i class="fa fa-edit"></i>
-                                                                <span>Edit</span>
                                                             </a>
+
+                                                            <form action="{{ route('members.updateStatus', $member->id) }}" method="POST" style="display:inline;">
+                                                                @csrf
+                                                                @method('PUT')
+                                                                @if($member->status)
+                                                                    <button type="submit" class="btn btn-warning btn-sm" title="Deactivate" onclick="return confirm('Are you sure you want to deactivate this member?')">
+                                                                        <i class="fa fa-ban"></i>
+                                                                    </button>
+                                                                @else
+                                                                    <button type="submit" class="btn btn-info btn-sm" title="Activate" onclick="return confirm('Are you sure you want to activate this member?')">
+                                                                        <i class="fa fa-check"></i>
+                                                                    </button>
+                                                                @endif
+                                                            </form>
                                                             
                                                             <button type="button" onclick="deleteData({{ $member->id }})" class="btn btn-danger btn-sm" title="Delete">
                                                                 <i class="fa fa-trash-alt"></i>
-                                                                <span>Delete</span>
                                                             </button>
 
                                                     <form id="delete-form-{{ $member->id }}" method="POST" action="{{ route('members.destroy',$member->id) }}" style="display: none;">
