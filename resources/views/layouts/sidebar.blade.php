@@ -53,6 +53,14 @@
                 <span>Activity Report</span>
             </a>
         </li>
+
+        <li class="section-title mt-3">SETTINGS</li>
+        <li class="{{ request()->routeIs('profile.edit') ? 'active' : '' }}">
+            <a href="{{ route('profile.edit') }}">
+                <i class="far fa-user-circle"></i>
+                <span>My Profile</span>
+            </a>
+        </li>
     </ul>
 
     <div class="sidebar-footer">
