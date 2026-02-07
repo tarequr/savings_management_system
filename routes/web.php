@@ -34,12 +34,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('loans', LoanController::class);
     Route::post('loans/{loan}/approve', [LoanController::class, 'approve'])->name('loans.approve');
     Route::post('loans/{loan}/reject', [LoanController::class, 'reject'])->name('loans.reject');
+
     // Reports
-    Route::get('reports/activity', [ActivityReportController::class, 'index'])->name('reports.activity');
-    Route::get('reports/savings', [ReportController::class, 'savingsReport'])->name('reports.savings');
-    Route::get('reports/savings/pdf', [ReportController::class, 'exportSavingsPDF'])->name('reports.savings.pdf');
-    Route::get('reports/loans', [ReportController::class, 'loansReport'])->name('reports.loans');
-    Route::get('reports/loans/pdf', [ReportController::class, 'exportLoansPDF'])->name('reports.loans.pdf');
+    Route::prefix('reports')->group(function () {
+        Route::get('activity', [ActivityReportController::class, 'index'])->name('reports.activity');
+        Route::get('savings', [ReportController::class, 'savingsReport'])->name('reports.savings');
+        Route::get('savings/pdf', [ReportController::class, 'exportSavingsPDF'])->name('reports.savings.pdf');
+        Route::get('loans', [ReportController::class, 'loansReport'])->name('reports.loans');
+        Route::get('loans/pdf', [ReportController::class, 'exportLoansPDF'])->name('reports.loans.pdf');
+    });
 });
 
 require __DIR__.'/auth.php';
