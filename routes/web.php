@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    
     // Member Management (Admin Only)
     Route::middleware(['auth'])->group(function() {
         Route::put('members/{id}/status', [MemberController::class, 'updateStatus'])->name('members.updateStatus');
