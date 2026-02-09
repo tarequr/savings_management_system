@@ -7,33 +7,41 @@ on:
 
 jobs:
   deploy:
+    name: Deploy Laravel App to cPanel
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          cat << 'EOF' > ~/.ssh/id_ed25519
-${{ secrets.SSH_KEY }}
-EOF
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -p 7822 -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Deploy to Server
         run: |
-          ssh -p 7822 -o StrictHostKeyChecking=no \
-          -i ~/.ssh/id_ed25519 \
-          ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-
+          ssh -i ~/.ssh/id_ed25519 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             set -e
+
             cd /home/aminssrj/savings.aminps.org
 
+            echo "🔄 Pulling latest code..."
             git pull origin main
+
+            echo "📦 Installing Composer dependencies..."
             composer install --no-dev --optimize-autoloader
+
+            echo "🧹 Clearing old cache..."
             php artisan optimize:clear
+
+            echo "🗄️ Running migrations..."
             php artisan migrate --force
+
+            echo "⚡ Optimizing application..."
             php artisan optimize
 
+            echo "✅ Deployment completed successfully!"
           EOF
