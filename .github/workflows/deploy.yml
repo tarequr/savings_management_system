@@ -34,7 +34,7 @@ jobs:
             git reset --hard origin/main
 
             php artisan migrate:refresh --force || true
-            php artisan migrate:db --seed || true
+            php artisan db:seed || true
             cat storage/logs/laravel.log || true
 
             php artisan optimize:clear
