@@ -1,4 +1,4 @@
-name: Laravel CI/CD Deploy
+name: Deploy Laravel App to Server
 
 on:
   push:
@@ -7,41 +7,35 @@ on:
 
 jobs:
   deploy:
-    name: Deploy Laravel App to cPanel
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, dom, fileinfo, libxml, mbstring, openssl, pdo, sqlite, pdo_sqlite, tokenizer, xml
+          tools: composer:v2
 
-      - name: Deploy to Server
-        run: |
-          ssh -i ~/.ssh/id_ed25519 ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-            set -e
-
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 21098 }}
+          script: |
             cd /home/aminssrj/savings.aminps.org
 
-            echo "🔄 Pulling latest code..."
-            git pull origin main
+            git fetch origin main || true
+            git reset --hard origin/main
 
-            echo "📦 Installing Composer dependencies..."
-            composer install --no-dev --optimize-autoloader
-
-            echo "🧹 Clearing old cache..."
             php artisan optimize:clear
-
-            echo "🗄️ Running migrations..."
-            php artisan migrate --force
-
-            echo "⚡ Optimizing application..."
-            php artisan optimize
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
 
             echo "✅ Deployment completed successfully!"
-          EOF
